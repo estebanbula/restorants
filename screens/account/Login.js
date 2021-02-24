@@ -1,12 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import Loading from '../../components/Loading'
 
-export default function UserLogged() {
+export default function Login() {
     return (
         <View>
-            <Text>User Logged</Text>
-            <Loading isVisible = {true}/>
+            <Text>Login</Text>
         </View>
     )
 }

@@ -10,6 +10,7 @@ export default function Loading({ isVisible, text }) {
         windowBackgroundColor = "rgba(0,0,0,0.5)"
         overlayBackgroundColor = "transparent"
         overlayStyle = {styles.overlay}>
+            
             <View style = {styles.view}>
                 <ActivityIndicator
                     size = "large"
@@ -24,8 +25,8 @@ export default function Loading({ isVisible, text }) {
 
 const styles = StyleSheet.create({
     overlay : {
-        height: 100,
-        width: 100,
+        height: 70,
+        width: 70,
         backgroundColor: "#FFF",
         borderWidth: 1,
         borderRadius: 5
