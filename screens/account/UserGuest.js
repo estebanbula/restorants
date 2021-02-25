@@ -17,7 +17,7 @@ export default function UserGuest() {
                 resizeMode = "contain"
                 style = {styles.image}/>
             <Text style = {styles.title}>¡Welcome!</Text>
-            <Text style = {styles.title}>You must sing in form more options</Text>
+            <Text style = {styles.title}>You must log in form more options</Text>
             <Button
                 buttonStyle = { styles.button}
                 title = "Sing in"
