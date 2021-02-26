@@ -1,31 +1,70 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
+import Toast from 'react-native-easy-toast'
 
-import { closeSession } from '../../utils/actions'
+import { closeSession, getCurrentUser } from '../../utils/actions'
+import Loading from '../../components/Loading'
+import InfoUser from '../../components/account/InfoUser'
 
 export default function UserLogged() {
+    const toastRef = useRef()
     const navigation = useNavigation()
 
+    const [loading, setLoading] = useState(false)
+    const [loadingText, setLoadingText] = useState("")
+    const [user, setUser] = useState(null)
+
+    useEffect(() => {
+        setUser(getCurrentUser())
+    }, [])
+
     return (
-        <View>
-            <Text>User Logged</Text>
+        <View style = {styles.container}>
+            {
+                user && (
+                <View>
+                    <InfoUser 
+                        user = {user} 
+                        setLoading = {setLoading} 
+                        setLoadingText = {setLoadingText}
+                    />
+                    <Text>Account options</Text>
+                </View>
+                )
+            }
             <Button
                 title = "Log out"
                 buttonStyle = {styles.button}
+                titleStyle = {styles.closeSessionButton}
                 onPress = {() => {
                     closeSession()
                     navigation.navigate("restorants")
                 }}
             />
+            <Toast ref = {toastRef} position = "center" opacity = {0.9}/>
+            <Loading isVisible = {loading}/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: "#14145c",
-        marginVertical: 20
+        backgroundColor: "#FFF",
+        marginTop: 30,
+        borderTopWidth: 1,
+        borderTopColor: "#14145c",
+        borderBottomColor: "#14145c",
+        borderBottomWidth: 1,
+        paddingVertical: 10
+    },
+    container: {
+        flex: 1,
+        minHeight: "100%",
+        backgroundColor: "#FFFFFF"
+    },
+    closeSessionButton: {
+        color: "#14145c"
     }
 })

@@ -4,6 +4,9 @@ import { Input, Icon, Button } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 
 import Loading from '../Loading'
+import { validateEmail } from '../../utils/helper'
+import { loginWithEmailAndPassword } from '../../utils/actions'
+import { isEmpty } from 'lodash'
 
 export default function LoginForm() {
     const navigation = useNavigation()
@@ -19,15 +22,26 @@ export default function LoginForm() {
         setformData({ ...formData, [type]: e.nativeEvent.text })
     }
 
-    const doLoginUser = () => {
-        if (!validateData) {
+    const doLoginUser = async() => {
+        if (!validateData()) {
             return;
         }
         console.log("login")
+
+        setLoading(true)
+        const result = await loginWithEmailAndPassword(formData.email, formData.password)
+        setLoading(false)
+
+        if (!result.statusResponse)
+        {
+            seterrorEmail(result.error)
+            return
+        }
+
+        navigation.navigate("account")
     }
 
     const validateData = () => {
-        seterrorConfirm("")
         seterrorEmail("")
         seterrorPassword("")
         let isValid = true 
@@ -37,8 +51,8 @@ export default function LoginForm() {
             isValid = false
         }
 
-        if (size(formData.password) < 8){
-            seterrorPassword("Your password must have more than 8 caracters")
+        if(isEmpty(formData.password)) {
+            seterrorPassword("Password empty")
             isValid = false
         }
 

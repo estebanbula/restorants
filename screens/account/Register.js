@@ -5,7 +5,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 export default function Register() {
     return (
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView
+        backgroundColor = "#FFFFFF">
             <Image
                 resizeMode = "contain"
                 source = {require("../../assets/rest-logo.png")}
