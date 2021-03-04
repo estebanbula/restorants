@@ -1,11 +1,12 @@
-import { isEmpty, negate } from 'lodash'
 import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Input } from 'react-native-elements'
+import { isEmpty, negate } from 'lodash'
+import Toast from 'react-native-easy-toast'
 
 import { updateProfile } from '../../utils/actions'
 
-export default function ChangeDisplayNameForm({ displayName, setShowModal, toasRef, setReloadUser}) {
+export default function ChangeDisplayNameForm({ displayName, setShowModal, toastRef, setReloadUser}) {
     const [newDisplayName, setNewDisplayName] = useState(null)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -16,7 +17,7 @@ export default function ChangeDisplayNameForm({ displayName, setShowModal, toasR
         }
 
         setLoading(true)
-        const result = await updateProfile({displayName: newDisplayName})
+        const result = await updateProfile({ displayName: newDisplayName })
         setLoading(false)
 
         if (!result.statusResponse) {
@@ -25,7 +26,7 @@ export default function ChangeDisplayNameForm({ displayName, setShowModal, toasR
         }
 
         setReloadUser(true)
-        toasRef.current.show("Information saved", 3000)
+        toastRef.current.show("Information saved", 3000)
         setShowModal(false)
     }
 
@@ -48,16 +49,16 @@ export default function ChangeDisplayNameForm({ displayName, setShowModal, toasR
     return (
         <View style = {styles.view}>
             <Input
-                placeholder = "Name and lastname"
+                placeholder = "New name and lastname"
                 containerStyle = {styles.input}
                 defaultValue = {displayName}
                 onChange = {(e) => setNewDisplayName(e.nativeEvent.text)}
                 errorMessage = {error}
-                rightIcon = {{
+                leftIcon = {{
                     type: "material-community",
                     name: "account-circle-outline",
                     color: "#14145c"
-                }}></Input>
+                }}/>
                 <Button
                     title = "Save changes"
                     containerStyle = {styles.btnContainer}
