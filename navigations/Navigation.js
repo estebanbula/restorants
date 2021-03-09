@@ -1,6 +1,7 @@
 import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
 
 import RestorantsStack from './RestorantsStack'
 import FavoritesStack from './FavoritesStack'
@@ -12,6 +13,8 @@ import { Icon } from 'react-native-elements'
 const Tab = createBottomTabNavigator()
 
 export default function Navigation() {
+    const scheme = useColorScheme()
+
     const screenOptions = (route, color) => {
         let iconName
         switch (route.name) {
@@ -43,7 +46,7 @@ export default function Navigation() {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer theme = {scheme === "dark" ? DarkTheme : DefaultTheme}>
             <Tab.Navigator
                 initialRouteName = "restorants"
                 tabBarOptions = {{
