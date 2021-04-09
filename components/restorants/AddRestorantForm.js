@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, ScrollView, Alert } from 'react-native'
-import { Button, Input, Icon, Avatar } from 'react-native-elements'
+import { StyleSheet, Text, View, ScrollView, Alert, Dimensions} from 'react-native'
+import { Button, Input, Icon, Avatar, Image } from 'react-native-elements'
 import CountryPicker from 'react-native-country-picker-modal'
 import { map, size, filter } from 'lodash'
 
+import Modal from "../../components/Modal"
 import { loadImageFromGallery } from '../../utils/helper'
+
+const widthScreen = Dimensions.get("window").width
 
 export default function AddRestorantForm({ toastRef, setLoading, navigaition }) {
 
@@ -15,6 +18,8 @@ export default function AddRestorantForm({ toastRef, setLoading, navigaition }) 
     const [errorPhone, setErrorPhone] = useState(false)
     const [errorDescription, setErrorDescription] = useState(false)
     const [imageSelected, setImageSelected] = useState([])
+    const [isVisibleMap, setIsVisibleMap] = useState(false)
+    const [locationRestorant, setLocationRestorant] = useState(null)
 
     const addRestorant = () => {
         console.log(formData)
@@ -22,9 +27,11 @@ export default function AddRestorantForm({ toastRef, setLoading, navigaition }) 
     }
 
     return (
-        <View
+        <ScrollView
             backgroundColor = "white" 
             style = {styles.viewContainer}>
+            <ImageRestorant 
+                imageRestorant = {imageSelected[0]}/>
             <FormAdd
                 formData = {formData}
                 setFormData = {setFormData}
@@ -32,7 +39,8 @@ export default function AddRestorantForm({ toastRef, setLoading, navigaition }) 
                 errorEmail = {errorEmail}
                 errorName = {errorName}
                 errorPhone = {errorPhone}
-                errorDescription = {errorDescription}/>
+                errorDescription = {errorDescription}
+                setIsVisibleMap = {setIsVisibleMap}/>
             <UploadImage
                 toastRef = {toastRef}
                 imageSelected = {imageSelected}
@@ -41,6 +49,36 @@ export default function AddRestorantForm({ toastRef, setLoading, navigaition }) 
                 title = "Add restorant"
                 onPress = {addRestorant}
                 buttonStyle = {styles.btnAddRestorant}/>
+            <MapRestorant
+                isVisibleMap = {isVisibleMap}
+                setIsVisibleMap = {setIsVisibleMap}
+                setLocationRestorant = {setLocationRestorant}
+                toastRef = {toastRef}/>
+        </ScrollView>
+    )
+}
+
+function MapRestorant( isVisibleMap, setIsVisibleMap, setLocationRestorant, toastRef ){
+    console.log("maprestorant")
+    return(
+        <Modal 
+            isVisible = {isVisibleMap} 
+            setVisible = {isVisibleMap}>
+            <Text>Map</Text>
+        </Modal>
+    )
+}
+
+function ImageRestorant({ imageRestorant }){
+    return (
+        <View
+            styles = {styles.viewPhoto}>
+                <Image 
+                    style = {{ width: widthScreen, height: 200 }}
+                    source = { 
+                        imageRestorant ? { uri: imageRestorant} : require("../../assets/no-image.png")
+                    }
+                />
         </View>
     )
 }
@@ -106,7 +144,7 @@ function UploadImage({ toastRef, imageSelected, setImageSelected }) {
     )
 }
 
-function FormAdd({ formData, setFormData, errorAddress, errorEmail, errorName, errorDescription, errorPhone }) {
+function FormAdd({ formData, setFormData, errorAddress, errorEmail, errorName, errorDescription, errorPhone, setIsVisibleMap }) {
     const [country, setCountry] = useState("CO")
     const [callingCode, setCallingCode] = useState("57")
     const [phone, setPhone] = useState("")
@@ -135,7 +173,8 @@ function FormAdd({ formData, setFormData, errorAddress, errorEmail, errorName, e
                     <Icon
                     type = "material-community"
                     name = "map-marker-outline"
-                    iconStyle = {styles.icon}/>
+                    iconStyle = {styles.icon}
+                    onPress = {() => setIsVisibleMap(true)}/>
                 }
                 placeholder = "Restorant address"
                 defaultValue = {formData.address}
@@ -202,6 +241,11 @@ const defaultFormValues = () => {
 }
 
 const styles = StyleSheet.create({
+    viewPhoto: {
+        alignItems: "center",
+        height: 200,
+        marginBottom: 20
+    },
     viewContainer: {
         height: "100%"
     },
